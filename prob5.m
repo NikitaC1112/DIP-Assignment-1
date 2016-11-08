@@ -1,0 +1,47 @@
+clear all;
+I=imread('color.jpg');
+figure;
+imshow(I);
+[x y z]=size(I);
+colortransform = makecform('srgb2lab');
+LabI = applycform(I,colortransform);
+figure;
+imshow(LabI);
+absolutevalue = double(LabI(:,:,2:3));
+ab = reshape(absolutevalue,x*y,2);
+cluster=9;
+[index] = kmeans(ab,cluster,'distance','sqEuclidean','Replicates',5);
+pixel_labels = reshape(index,x,y);
+%pixel_labels=uint8(pixel_labels);
+%pixel_labels=pixel_labels*135;
+figure;
+imshow(pixel_labels);
+segmented_images=cell(1,cluster);
+rgb_label = repmat(pixel_labels,[1 1 3]);
+figure;
+imshow(rgb_label);
+for k = 1:cluster
+    color = I;
+    color(rgb_label ~= k) = 0;
+    segmented_images{k} = color;
+end
+figure;
+imshow(segmented_images{1}), title('objects in cluster 1');
+figure;
+imshow(segmented_images{2}), title('objects in cluster 2');
+figure;
+imshow(segmented_images{3}), title('objects in cluster 3');
+figure;
+imshow(segmented_images{4}), title('objects in cluster 4');
+figure;
+imshow(segmented_images{5}), title('objects in cluster 5');
+figure;
+imshow(segmented_images{6}), title('objects in cluster 6');
+figure;
+imshow(segmented_images{7}), title('objects in cluster 7');
+figure;
+imshow(segmented_images{8}), title('objects in cluster 8');
+figure;
+imshow(segmented_images{9}), title('objects in cluster 9');
+
+%B = reshape(I,[450 1800]);
